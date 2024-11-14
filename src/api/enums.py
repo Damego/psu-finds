@@ -1,0 +1,27 @@
+from enum import IntEnum
+
+from pydantic import BaseModel
+
+
+class ResponseErrorCode(IntEnum):
+    MISSING_TOKEN = 10000
+    INVALID_TOKEN = 10001
+    INVALID_TOKEN_TYPE = 10002
+    TOKEN_EXPIRED = 10003
+
+    INVALID_USER_CREDENTIALS = 10100
+    USER_ALREADY_EXISTS = 10101
+    USER_ALREADY_VERIFIED = 10102
+    USER_NOT_FOUND = 10103
+    MISSING_PERMISSIONS = 10104
+    SAME_EMAIL_ADDRESS = 10105
+    EMAIL_ADDRESS_ALREADY_TAKEN = 10106
+    USER_NOT_VERIFIED = 10107
+
+    MISSING_ARGUMENTS = 10200
+
+    NOT_YOUR_ITEM = 10300
+
+
+class ResponseError(BaseModel):
+    code: ResponseErrorCode
