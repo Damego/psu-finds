@@ -26,8 +26,16 @@ class S3Client:
 
     async def upload_file(self, file: bytes, filename: str):
         async with self.get_client() as client:
-            await client.put_object(
+            res = await client.put_object(
                 Bucket=self.__bucket_name,
                 Body=file,
+                Key=filename,
+            )
+            return res
+
+    async def delete_file(self, filename: str):
+        async with self.get_client() as client:
+            await client.delete_object(
+                Bucket=self.__bucket_name,
                 Key=filename,
             )
