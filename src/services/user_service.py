@@ -1,6 +1,6 @@
 from typing import Optional, Type
 
-from ..api import auth
+from ..api import auth, exceptions
 from ..models.schemas.users import UserCreate, UserSchema, UserUpdate
 from src.utils.abstract.db_repository import Repository
 
@@ -20,6 +20,11 @@ class UserService:
         return await self.repository.get_one(email=email)
 
     async def add_user(self, user_create: UserCreate) -> UserSchema:
+        user = await self.get_user(email=user_create.email)
+
+        if user is not None:
+            raise exceptions.duplicate_user
+
         hashed_password = auth.get_password_hash(user_create.password)
         payload = {
             "name": user_create.name,
