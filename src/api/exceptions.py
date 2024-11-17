@@ -78,3 +78,8 @@ not_your_item = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
     detail=ResponseError(code=ResponseErrorCode.NOT_YOUR_ITEM)
 )
+
+item_does_not_exists = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail=ResponseError(code=ResponseErrorCode.ITEM_DOES_NOT_EXIST)
+)

@@ -21,6 +21,7 @@ class ResponseErrorCode(IntEnum):
     MISSING_ARGUMENTS = 10200
 
     NOT_YOUR_ITEM = 10300
+    ITEM_DOES_NOT_EXIST = 10301
 
 
 class ResponseError(BaseModel):

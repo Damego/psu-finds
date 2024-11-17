@@ -13,7 +13,10 @@ class ItemService:
         self.repository: Repository[ItemSchema] = repository_type()
 
     async def get_item_by_id(self, item_id: int) -> ItemSchema:
-        return await self.repository.get_by_id(item_id)
+        item = await self.repository.get_by_id(item_id)
+        if item is None:
+            raise exceptions.item_does_not_exists
+        return item
 
     async def get_items(self) -> list[ItemSchema]:
         return await self.repository.get_all()
@@ -27,14 +30,16 @@ class ItemService:
     async def update_item(
         self, user: UserSchema, item_id: int, item_update: UpdateItemSchema
     ) -> ItemSchema | None:
-        item = await self.repository.get_by_id(item_id)
+        item = await self.get_item_by_id(item_id)
+
         if not user.is_admin and item.user_id != user.id:
             raise exceptions.not_your_item
 
         return await self.repository.update_by_id(item_id, item_update.model_dump())
 
     async def delete_item(self, user: UserSchema, item_id: int) -> None:
-        item = await self.repository.get_by_id(item_id)
+        item = await self.get_item_by_id(item_id)
+
         if not user.is_admin and item.user_id != user.id:
             raise exceptions.not_your_item
 
