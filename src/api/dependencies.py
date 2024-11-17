@@ -77,8 +77,8 @@ async def validate_auth_user(
         raise exceptions.invalid_credentials
     if not auth.verify_password_hash(password, user.hashed_password):
         raise exceptions.invalid_credentials
-    if not user.is_verified:
-        raise exceptions.user_not_verified
+    # if not user.is_verified:
+    #     raise exceptions.user_not_verified
 
     return user
 
