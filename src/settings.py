@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     DATABASE_PASSWORD: str
     DATABASE_NAME: str
 
+    S3_ACCESS_KEY: str
+    S3_SECRET_KEY: str
+    S3_ENDPOINT: str
+    S3_BUCKET: str
+
     auth_jwt: AuthJTWT = AuthJTWT()
 
     @property

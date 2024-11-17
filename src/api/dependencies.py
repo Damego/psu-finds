@@ -9,11 +9,23 @@ from ..api import auth, exceptions
 from ..models.enums import UserPermissions
 from ..models.schemas.users import UserCreate, UserSchema
 from ..repositories.item_repository import ItemRepository
+from ..s3.client import S3Client
 from ..services.item_service import ItemService
 from ..services.user_service import UserService
 from ..repositories.user_repository import UserRepository
+from ..settings import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/signin", auto_error=False)
+s3_client = S3Client(
+    access_key=settings.S3_ACCESS_KEY,
+    secret_key=settings.S3_SECRET_KEY,
+    endpoint_url=settings.S3_ENDPOINT,
+    bucket_name=settings.S3_BUCKET,
+)
+
+
+def get_s3_client() -> S3Client:
+    return s3_client
 
 
 def get_user_service():
@@ -103,6 +115,7 @@ async def validate_user_create(
 IUserService = Annotated[UserService, Depends(get_user_service)]
 ItemServiceDep = Annotated[ItemService, Depends(get_items_service)]
 ICurrentUser = Annotated[UserSchema, Depends(get_current_user(TokenTypes.ACCESS))]
+S3ClientDep = Annotated[S3Client, Depends(get_s3_client)]
 
 
 async def get_admin_user(user: ICurrentUser):
