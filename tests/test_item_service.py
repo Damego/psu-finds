@@ -96,10 +96,22 @@ class TestItemService:
 
         await items_service.delete_item(user, item.id)
 
-        db_item = await items_service.get_item_by_id(item.id)
-        assert db_item is None
+        with pytest.raises(HTTPException) as exp:
+            await items_service.get_item_by_id(item.id)
+        assert exp.value.detail["code"] == ResponseErrorCode.ITEM_DOES_NOT_EXIST
+
+    @pytest.mark.asyncio(loop_scope="session")
+    async def test_delete_item_which_does_not_exist(self, items_service):
+        item = Storage.item
+        user = Storage.user
+        with pytest.raises(HTTPException) as exp:
+            await items_service.delete_item(user, item.id)
+        assert exp.value.detail["code"] == ResponseErrorCode.ITEM_DOES_NOT_EXIST
 
     @pytest.mark.asyncio(loop_scope="session")
     async def test_get_item_which_does_not_exist(self, items_service):
-        item_db = await items_service.get_item_by_id(Storage.item.id)
-        assert item_db is None
+        FAKE_ITEM_ID = 0
+
+        with pytest.raises(HTTPException) as exp:
+            await items_service.get_item_by_id(FAKE_ITEM_ID)
+        assert exp.value.detail["code"] == ResponseErrorCode.ITEM_DOES_NOT_EXIST
