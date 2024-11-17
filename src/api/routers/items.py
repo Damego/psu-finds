@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile
 from fastapi.security import HTTPBearer
 
 from src.api.dependencies import ItemServiceDep, ICurrentUser
@@ -48,7 +48,7 @@ async def get_all_items(service: ItemServiceDep):
 
 
 @router.post("")
-async def add_item(item: CreateItemSchema, user: ICurrentUser, service: ItemServiceDep):
+async def add_item(item: CreateItemSchema, images: list[UploadFile], user: ICurrentUser, service: ItemServiceDep):
     """
     Добавление нового предмета
     """
