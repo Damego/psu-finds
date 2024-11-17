@@ -1,8 +1,11 @@
 import pytest
 
 from src.api.dependencies import get_items_service
+from src.api.enums import ResponseErrorCode
+from src.api.exceptions import HTTPException
 from src.models.enums import ItemTypes, ItemStatus
 from src.models.schemas.items import CreateItemSchema, UpdateItemSchema
+from src.models.schemas.users import UserSchema
 from tests.conftest import Storage
 
 
@@ -55,6 +58,38 @@ class TestItemService:
         assert db_item.status == ItemStatus.CLOSED
 
     @pytest.mark.asyncio(loop_scope="session")
+    async def test_update_item_not_owner(self, items_service):
+        other_user = UserSchema(**Storage.user.model_dump(exclude={"id"}), id=0)
+        item = Storage.item
+        item_update = UpdateItemSchema(
+            name=f"[Закрыто] {item.name}",
+            description=f"[Закрыто] {item.description}]",
+            status=ItemStatus.CLOSED,
+        )
+
+        with pytest.raises(HTTPException) as exp:
+            await items_service.update_item(other_user, item.id, item_update)
+        assert exp.value.detail["code"] == ResponseErrorCode.NOT_YOUR_ITEM
+
+        item_db = await items_service.get_item_by_id(item.id)
+
+        assert item_db.name == item.name
+        assert item_db.name != item_update.name
+
+    @pytest.mark.asyncio(loop_scope="session")
+    async def test_get_item(self, items_service):
+        item = Storage.item
+        item_db = await items_service.get_item_by_id(item.id)
+
+        assert item_db is not None
+        assert item.id == item_db.id
+        assert item.name == item_db.name
+        assert item.type == item_db.type
+        assert item.description == item_db.description
+        assert item.created_at == item_db.created_at
+        assert item.status == item_db.status
+
+    @pytest.mark.asyncio(loop_scope="session")
     async def test_delete_item(self, items_service):
         item = Storage.item
         user = Storage.user
@@ -63,3 +98,8 @@ class TestItemService:
 
         db_item = await items_service.get_item_by_id(item.id)
         assert db_item is None
+
+    @pytest.mark.asyncio(loop_scope="session")
+    async def test_get_item_which_does_not_exist(self, items_service):
+        item_db = await items_service.get_item_by_id(Storage.item.id)
+        assert item_db is None

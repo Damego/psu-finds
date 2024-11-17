@@ -17,30 +17,38 @@ def user_service():
 class TestUserService:
     @pytest.mark.order(1)
     @pytest.mark.parametrize(
-        "name, email, password, expectation",
+        "name, email, password",
         [
-            ("User 1", "email@domain.com", "password1", nullcontext()),
-            ("User 2", "differennt_email@domain.com", "password1", nullcontext()),
-            ("Duplicate User 1", "email@domain.com", "password1", pytest.raises(HTTPException)),
+            ("User 1", "email@domain.com", "password1"),
+            ("User 2", "differennt_email@domain.com", "password1"),
         ]
     )
     @pytest.mark.asyncio(loop_scope="session")
-    async def test_add_user(self, user_service, name, email, password, expectation):
+    async def test_add_user(self, user_service, name, email, password):
         user_create_payload = UserCreate(
             name=name,
             email=email,
             password=password,
         )
 
-        with expectation as exp:
-            user = await user_service.add_user(user_create_payload)
-            assert user.name == user_create_payload.name
-            assert user.email == user_create_payload.email
+        user = await user_service.add_user(user_create_payload)
+        assert user.name == user_create_payload.name
+        assert user.email == user_create_payload.email
 
-            Storage.user = user
+        Storage.user = user
 
-        if exp:
-            assert exp.value.detail["code"] == ResponseErrorCode.USER_ALREADY_EXISTS
+    @pytest.mark.order(2)  # Must be executed after upper test case
+    @pytest.mark.asyncio(loop_scope="session")
+    async def test_add_user_which_already_exists(self, user_service):
+        user_create_payload = UserCreate(
+            name="Duplicate User 1",
+            email="email@domain.com",  # Same email
+            password="password1",
+        )
+
+        with pytest.raises(HTTPException) as exp:
+            await user_service.add_user(user_create_payload)
+        assert exp.value.detail["code"] == ResponseErrorCode.USER_ALREADY_EXISTS
 
     @pytest.mark.asyncio(loop_scope="session")
     async def test_update_user(self, user_service):
@@ -59,3 +67,8 @@ class TestUserService:
 
         db_user = await user_service.get_user(user_id=user.id)
         assert user.id == db_user.id
+
+    @pytest.mark.asyncio(loop_scope="session")
+    async def test_get_user_where_user_does_not_exist(self, user_service):
+        db_user = await user_service.get_user(user_id=0)
+        assert db_user is None
