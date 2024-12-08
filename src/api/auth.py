@@ -43,8 +43,6 @@ def create_jwt(*, type: TokenTypes, payload: dict, expire_delta: timedelta) -> s
 
 
 def create_access_token(user_id: int):
-    # TODO:
-    #   Спасибо Remix, что оно такое говно
     max_age = timedelta(days=7)
     return {
         "token": create_jwt(
