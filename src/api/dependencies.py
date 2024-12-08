@@ -9,18 +9,20 @@ from ..api import auth, exceptions
 from ..models.enums import UserPermissions
 from ..models.schemas.users import UserCreate, UserSchema
 from ..repositories.item_repository import ItemRepository
-from ..s3.client import S3Client
+from ..s3.builder import S3ClientBuilder
 from ..services.item_service import ItemService
 from ..services.user_service import UserService
 from ..repositories.user_repository import UserRepository
 from ..settings import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/signin", auto_error=False)
-s3_client = S3Client(
-    access_key=settings.S3_ACCESS_KEY,
-    secret_key=settings.S3_SECRET_KEY,
-    endpoint_url=settings.S3_ENDPOINT,
-    bucket_name=settings.S3_BUCKET,
+s3_client = (
+    S3ClientBuilder()
+    .set_access_key(settings.S3_ACCESS_KEY)
+    .set_secret_key(settings.S3_SECRET_KEY)
+    .set_endpoint_url(settings.S3_ENDPOINT)
+    .set_bucket_name(settings.S3_BUCKET)
+    .build()
 )
 
 
