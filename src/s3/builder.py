@@ -15,8 +15,8 @@ class S3ClientBuilderData(BaseModel):
 class S3ClientBuilder:
     __data: S3ClientBuilderData
 
-    def __init__(self, data: S3ClientBuilderData):
-        self.__data = data
+    def __init__(self, data: Optional[S3ClientBuilderData] = None):
+        self.__data = data or S3ClientBuilderData()
 
     def set_endpoint_url(self, endpoint_url: str):
         if not endpoint_url:
@@ -25,21 +25,25 @@ class S3ClientBuilder:
             raise ValueError("Invalid endpoint_url")
 
         self.__data.endpoint_url = endpoint_url
+        return self
 
     def set_access_key(self, access_key: str):
         if not access_key:
             raise ValueError("access_key cannot be empty")
         self.__data.access_key = access_key
+        return self
 
     def set_secret_key(self, secret_key: str):
         if not secret_key:
             raise ValueError("secret_key cannot be empty")
         self.__data.secret_key = secret_key
+        return self
 
     def set_bucket_name(self, bucket_name: str):
         if not bucket_name:
             raise ValueError("bucket_name cannot be empty")
         self.__data.bucket_name = bucket_name
+        return self
 
     def build(self):
         if not self.__data.endpoint_url:
@@ -55,5 +59,5 @@ class S3ClientBuilder:
             self.__data.endpoint_url,
             self.__data.access_key,
             self.__data.secret_key,
-            self.__data.bucket_name
+            self.__data.bucket_name,
         )
