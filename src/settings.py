@@ -35,6 +35,8 @@ class Settings(BaseSettings):
     S3_ENDPOINT: str
     S3_BUCKET: str
 
+    RUSENDER_API_KEY: str
+
     auth_jwt: AuthJTWT = AuthJTWT()
 
     @property

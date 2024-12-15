@@ -7,9 +7,8 @@ from ...api.dependencies import (
     get_current_user,
     get_user_service,
     validate_auth_user,
-    validate_user_register,
+    validate_user_register, IUserService,
 )
-from .. import exceptions
 from ...models.schemas.auth import Token
 from ...models.schemas.users import UserCreate, UserSchema
 from ...services.user_service import UserService
@@ -25,6 +24,11 @@ async def signup(
     user_service: UserService = Depends(get_user_service),
 ):
     await user_service.add_user(user_create)
+
+
+@router.post("/verify")
+async def verify_account(email: str, code: str, user_service: IUserService):
+    await user_service.verify_user_account(email, code)
 
 
 @router.post("/signin")

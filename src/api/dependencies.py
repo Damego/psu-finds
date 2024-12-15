@@ -8,9 +8,12 @@ from .auth import TokenData, TokenTypes
 from ..api import auth, exceptions
 from ..models.enums import UserPermissions
 from ..models.schemas.users import UserCreate, UserSchema
+from ..repositories.email_sender_repository import RuSenderRepository
 from ..repositories.item_repository import ItemRepository
 from ..s3.builder import S3ClientBuilder
+from ..s3.client import S3Client
 from ..services.item_service import ItemService
+from ..services.send_email_service import EmailService
 from ..services.user_service import UserService
 from ..repositories.user_repository import UserRepository
 from ..settings import settings
@@ -31,11 +34,15 @@ def get_s3_client() -> S3Client:
 
 
 def get_user_service():
-    return UserService(UserRepository)
+    return UserService(UserRepository())
 
 
 def get_items_service():
-    return ItemService(ItemRepository)
+    return ItemService(ItemRepository())
+
+
+def get_email_service():
+    return EmailService(RuSenderRepository())
 
 
 def get_current_token_data(

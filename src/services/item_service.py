@@ -1,5 +1,3 @@
-from typing import Type
-
 from src.api import exceptions
 from src.models.enums import ItemStatus
 from src.models.schemas.items import ItemSchema, CreateItemSchema, UpdateItemSchema
@@ -9,8 +7,8 @@ from src.utils.abstract.db_repository import Repository
 
 
 class ItemService:
-    def __init__(self, repository_type: Type[Repository]):
-        self.repository: Repository[ItemSchema] = repository_type()
+    def __init__(self, repository: Repository[ItemSchema]):
+        self.repository: Repository[ItemSchema] = repository
 
     async def get_item_by_id(self, item_id: int) -> ItemSchema:
         item = await self.repository.get_by_id(item_id)

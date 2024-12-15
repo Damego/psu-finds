@@ -54,8 +54,6 @@ class SQLAlchemyRepository(Repository):
         return query
 
     async def get_by_id(self, id: int, relationship: list[Any] = None):
-        if relationship is None:
-            await self.get_one(id=id)
         return await self.get_one(id=id)
 
     async def get_one(
