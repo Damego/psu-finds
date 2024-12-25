@@ -2,21 +2,23 @@ from typing import Optional
 import random
 
 from ..api import auth, exceptions
-from ..api.dependencies import get_email_service
 from ..models.schemas.users import UserCreate, UserSchema, UserUpdate
 from src.utils.abstract.db_repository import Repository
-from ..observers.email_observer import UserCreatedEmailObserver
-from ..observers.events.user import UserCreatedEvent
+from ..observers.events.user import UserCreatedEventData
+from ..observers.events.base import BaseEvent
+from ..observers.logger_observer import LoggerObserver
 from ..utils.abstract.observer import Observer
+from ..observers.email_observer import UserCreatedEmailObserver
 
 # TODO: Replace with Redis
 active_codes: dict[str, str] = {}
 
 
-class UserCreator:
-    observers: list[Observer] = [UserCreatedEmailObserver(get_email_service())]
-
+class UserCreatorService:
     def __init__(self, repository: Repository[UserSchema]):
+        from ..api.dependencies import get_email_service
+
+        self._observers: list[Observer] = [UserCreatedEmailObserver(get_email_service()), LoggerObserver()]
         self.repository = repository
 
     @staticmethod
@@ -37,8 +39,8 @@ class UserCreator:
         }
         user = await self.repository.add_one(payload)
 
-        event = UserCreatedEvent(user=user, verification_code=self._generate_code_for_email(user.email))
-        for observer in self.observers:
+        event = BaseEvent(data=UserCreatedEventData(user=user, verification_code=self._generate_code_for_email(user.email)))
+        for observer in self._observers:
             observer.accept(event)
 
         return user
@@ -68,7 +70,7 @@ class UserService:
         if user is not None:
             raise exceptions.duplicate_user
 
-        return await UserCreator(self.repository).create_user(user_create)
+        return await UserCreatorService(self.repository).create_user(user_create)
 
     async def verify_user_account(self, email: str, code: str):
         user = await self.get_user(email=email)

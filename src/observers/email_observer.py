@@ -8,4 +8,5 @@ class UserCreatedEmailObserver(Observer):
         self.service: EmailService = service
 
     def accept(self, event: UserCreatedEvent):
-        self.service.send_account_verification_email(event.email, event.verification_code)
+        data = event.data
+        self.service.send_account_verification_email(data.user.email, data.verification_code)
