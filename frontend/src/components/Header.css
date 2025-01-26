@@ -1,0 +1,37 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f59d9d;
+}
+
+.logo-container {
+  display: flex;
+align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.logo {
+  max-width: 150px;
+  height: auto;
+  margin-right: 10px;
+}
+.welcome-message{
+  position: absolute;
+  left: 110px; /* Adjust as needed */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+   border: 1px solid #ddd;
+   padding: 10px;
+  border-radius: 4px;
+  white-space: nowrap; /* предотвращение переноса строки */
+  z-index: 100;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}

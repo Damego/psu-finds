@@ -1,0 +1,66 @@
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .profile-info {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .profile-actions {
+    margin-top: 20px;
+  }
+  
+  .profile-actions button {
+    margin-right: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .logout-button, .edit-button, .save-button, .cancel-button {
+    background: lightgray;
+    color: black;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .edit-profile{
+     display:flex;
+      flex-direction: column;
+      align-items: center;
+  }
+  .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+  }
+  .form-group label {
+     margin-bottom: 5px;
+    font-weight: bold;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="file"] {
+    width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+  }
+  .profile-image {
+      width: 100px;
+      height: auto;
+       border-radius: 50%;
+       margin: 10px 0;
+  }
+  .buttons {
+     display: flex;
+     justify-content: space-around;
+  }

@@ -1,0 +1,13 @@
+.navigation {
+    display: flex;
+ }
+  .navigation a {
+     margin-left: 20px;
+     text-decoration: none;
+     color: #333;
+   }
+ 
+ .navigation a.active{
+    font-weight: bold;
+   color: #007bff;
+  }

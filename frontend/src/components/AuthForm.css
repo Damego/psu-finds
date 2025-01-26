@@ -1,0 +1,55 @@
+.auth-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+  }
+  
+  .auth-form h2 {
+    margin-bottom: 15px;
+  }
+  
+  .auth-form .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .auth-form .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .auth-form .form-group input[type="email"],
+  .auth-form .form-group input[type="password"],
+  .auth-form .form-group input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+  }
+  
+  .auth-form .buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+  .auth-button{
+    background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+  .cancel-button{
+     background: lightgray;
+      color: black;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+  }
