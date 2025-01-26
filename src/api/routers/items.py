@@ -33,6 +33,12 @@ async def update_item(
     return await service.update_item(user, item_id, item)
 
 
+@router.post("/{item_id}")
+async def close_item(item_id: int, user: ICurrentUser, service: ItemServiceDep):
+    """Закрывает предмет"""
+    return await service.close_item(user, item_id)
+
+
 @router.delete("/{item_id}")
 async def delete_item(item_id: int, user: ICurrentUser, service: ItemServiceDep):
     """Удаление предмета по его уникальному идентификатору"""

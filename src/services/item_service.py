@@ -35,6 +35,9 @@ class ItemService:
 
         return await self.repository.update_by_id(item_id, item_update.model_dump())
 
+    async def close_item(self, user: UserSchema, item_id: int):
+        return await self.update_item(user, item_id, UpdateItemSchema(type=ItemStatus.CLOSED))
+
     async def delete_item(self, user: UserSchema, item_id: int) -> None:
         item = await self.get_item_by_id(item_id)
 
