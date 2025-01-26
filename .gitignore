@@ -68,6 +68,8 @@ __pypackages__/
 # Enviroment files
 .env
 .test.env
+**/.env
+**/.test.env
 
 # IDE files
 .idea/
