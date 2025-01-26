@@ -8,7 +8,7 @@ from .auth import TokenData, TokenTypes
 from ..api import auth, exceptions
 from ..models.enums import UserPermissions
 from ..models.schemas.users import UserCreate, UserSchema
-from ..repositories.email_sender_repository import RuSenderRepository
+from ..repositories.email_sender_repository import RuSenderStrategy
 from ..repositories.item_repository import ItemRepository
 from ..s3.builder import S3ClientBuilder
 from ..s3.client import S3Client
@@ -42,7 +42,7 @@ def get_items_service():
 
 
 def get_email_service():
-    return EmailService(RuSenderRepository())
+    return EmailService(RuSenderStrategy())
 
 
 def get_current_token_data(

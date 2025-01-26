@@ -5,13 +5,13 @@ from src.settings import settings
 ENDPOINT = "https://api.beta.rusender.ru/api/v1/external-mails/send"
 
 
-class EmailSenderRepository:
+class EmailSenderStrategy:
     @staticmethod
     def send_email(target: str, title: str, content: str):
         raise NotImplementedError
 
 
-class RuSenderRepository(EmailSenderRepository):
+class RuSenderStrategy(EmailSenderStrategy):
     @staticmethod
     def send_email(target: str, title: str, content: str):
         payload = {
@@ -31,3 +31,9 @@ class RuSenderRepository(EmailSenderRepository):
 
         print(response.json())
         # TODO: provide 4xx handler https://rusender.ru/developer/api/email/
+
+
+class EmptyEmailSenderStrategy(EmailSenderStrategy):
+    @staticmethod
+    def send_email(target: str, title: str, content: str):
+        print("Email was sent!")
